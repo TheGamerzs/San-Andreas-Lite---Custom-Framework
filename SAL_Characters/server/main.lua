@@ -1,7 +1,6 @@
 -- The main server file for the SAL character framework.
 
 -- Database initialisation.
--- TODO prevent the function being called twice if possible.
 AddEventHandler('es:playerLoaded', function(source, user) 
     -- Get the player's identifier upon loading in.
     local identifiers = GetPlayerIdentifiers(source)
@@ -26,16 +25,8 @@ AddEventHandler('es:playerLoaded', function(source, user)
             MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @id', {['@id'] = identifier}, function(results)
                 playerInformation = results
 
-                -- Check to see how many characters have been registered with the player.
-                local numberOfCharacters = #playerInformation
-
-                if (numberOfCharacters == 1) and (playerInformation[1].char_id == nil) then
-                    print("Player " .. identifier .. " has no registered characters. Player needs to be registered before playing")
-                    TriggerClientEvent('SAL_Characters:RegisterPlayer', identifier)
-                else
-                    -- TODO redirect to the character selection screen.
-                    -- Allow the player to spawn in, getting their skin ready to load in etc. If the skin is null for example, we can instead just spawn in a default ped.
-                end
+                -- TODO run a sanity check on the user's identifier before going to register menu.
+                TriggerClientEvent('SAL_Characters:RegisterPlayer', source)
             end)
         end)
     else
