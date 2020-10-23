@@ -33,18 +33,20 @@ $("#create-character").submit(function (event) {
   let lastNight = $("#last-name").val();
   let dob = $("#dob").val();
 
-  // Post to the client function.
+  // TODO Post to the client function.
 });
 
 // When the NUI message gets called.
 // TODO be able to load in any character data if the player has any characters available.
 $(function () {
+  // Waiting for the server to open the UI.
   window.addEventListener("message", function (event) {
     if (event.data.type === "enableui") {
       openUI("char-select", event.data);
     }
   });
 
+  // Date system for the DOB field.
   let date_input = $('input[name="dob"]'); //our date input has the name "date"
   let container =
     $(".bootstrap-iso form").length > 0
