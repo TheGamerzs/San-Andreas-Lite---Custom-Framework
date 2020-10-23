@@ -1,7 +1,8 @@
 local displayActive = false
-local isMenuLoaded = false
+local isCharacterLoaded = false
 
--- Fade the screen out if the player hasn't loaded yet.
+-- Fade the screen out if the player hasn't loaded yet. 
+-- Used to create the blackout background effect.
 AddEventHandler('SAL_Characters:SetupScreenRequirements', function()
     DoScreenFadeOut(1000)
 
@@ -14,10 +15,6 @@ end)
 
 RegisterNetEvent('SAL_Characters:RegisterPlayer')
 AddEventHandler('SAL_Characters:RegisterPlayer', function(identifier)
-    if not isMenuLoaded then
-        isMenuLoaded = true
-    end
-
     -- Create the NUI for player registration.
     if not displayActive then
         displayActive = true
@@ -33,12 +30,14 @@ AddEventHandler('SAL_Characters:RegisterPlayer', function(identifier)
     end
 end)
 
+-- TODO Create handler when UI is closed.
+
 -- Main Thread
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(5)
 
-        if NetworkIsSessionStarted() and (not isMenuLoaded) then
+        if NetworkIsSessionStarted() and (not isCharacterLoaded) then
             TriggerEvent('SAL_Characters:SetupScreenRequirements')
         end
 
