@@ -20,11 +20,41 @@ $(".create-new-character").click(function () {
   openUI("char-create");
 });
 
+// TODO Run verification checks on form.
+// TODO Make sure form is secure.
+$("#create-character").submit(function (event) {
+  // Gather then values from each input field.
+  // Create an object based around them.
+  // Submit to client.
+  event.preventDefault();
+
+  let firstName = $("#first-name").val();
+  let middleName = $("#middle-name").val();
+  let lastNight = $("#last-name").val();
+  let dob = $("#dob").val();
+
+  // Post to the client function.
+});
+
 // When the NUI message gets called.
+// TODO be able to load in any character data if the player has any characters available.
 $(function () {
   window.addEventListener("message", function (event) {
     if (event.data.type === "enableui") {
       openUI("char-select", event.data);
     }
   });
+
+  let date_input = $('input[name="dob"]'); //our date input has the name "date"
+  let container =
+    $(".bootstrap-iso form").length > 0
+      ? $(".bootstrap-iso form").parent()
+      : "body";
+  let options = {
+    format: "mm/dd/yyyy",
+    container: container,
+    todayHighlight: true,
+    autoclose: true,
+  };
+  date_input.datepicker(options);
 });

@@ -24,7 +24,6 @@ AddEventHandler('es:playerLoaded', function(source, user)
         MySQL.ready(function()
             MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @id', {['@id'] = identifier}, function(results)
                 playerInformation = results
-
                 -- TODO run a sanity check on the user's identifier before going to register menu.
                 TriggerClientEvent('SAL_Characters:RegisterPlayer', source)
             end)
