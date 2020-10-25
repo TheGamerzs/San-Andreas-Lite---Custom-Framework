@@ -1,3 +1,5 @@
+let chosenID = null;
+
 function closeUI(container, data) {
   if (container === "char-select")
     $("#char-select-container").css({ display: "none" });
@@ -38,12 +40,20 @@ function openUI(container, data) {
     $("#char-creation-container").css({ display: "block" });
 }
 
-// When a new character is created, open the character creation screen.
-$(".create-new-character").click(function () {
-  // TODO Gather the character ID slot that the user clicked on. This needs to get sent through to the database eventually.
+// Gather the character ID from the slot that it chooses from.
+function gatherCharID(charSlot) {
+  chosenID = charSlot.getAttribute("data-charid");
+}
 
-  closeUI("char-select");
-  openUI("char-create");
+// When a new character is created, open the character creation screen.
+$("#create-new-character").click(function () {
+  // Have it so that you need to click on a character slot before playing or creating a character.
+  if (chosenID !== null) {
+    closeUI("char-select");
+    openUI("char-create");
+  } else {
+    console.log("Tell the user that they need to choose an ID"); // TODO complete.
+  }
 });
 
 function verifyFormInformation(firstName, middleName, lastName, dob) {
@@ -85,6 +95,8 @@ $("#create-character").submit(function (event) {
     dob
   );
 
+  if (isNaN(middleName)) middleName = "";
+
   switch (isResponseValid) {
     case "ok":
       $.post(
@@ -94,6 +106,7 @@ $("#create-character").submit(function (event) {
           middleName: middleName,
           lastName: lastName,
           dateOfBirth: dob,
+          charID: chosenID,
         })
       );
       break;

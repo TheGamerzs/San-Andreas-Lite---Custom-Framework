@@ -1,6 +1,46 @@
 -- The main server file for the SAL character framework.
 
--- TODO Change user identifiers to use "char[num]:" instead of "Steam"
+-- Finish the character registration and add to the database. 
+RegisterNetEvent('sal_characters:newCharacter')
+AddEventHandler('sal_characters:newCharacter', function(data)
+    print("User wants to create character with the following information: ")
+    print(json.encode(data))
+
+    local identifiers = GetPlayerIdentifiers(source)
+
+    local licenseIdentifier
+    local steamIdentifier
+    local identifierSuffix
+    -- Extract the license identifier out of it. EssentialMode ensures that our character spawns in with a steam ID.
+    for k, v in ipairs(identifiers) do
+        if string.match(v, 'license:') then
+            licenseIdentifier = v
+            break
+        end
+    end
+
+    for k, v in ipairs(identifiers) do
+        if string.match(v, 'steam:') then
+            steamIdentifier = v
+            identifierSuffix = steamIdentifier:sub(7)
+            break
+        end
+    end
+
+    local charID = data.charID
+    local newIdentifier = "char" .. charID .. ":" .. identifierSuffix
+
+    -- Add to the database, ensure everything is okay then we can send to the client a message to load in.
+    MySQL.ready(function()
+        MySQL.Async.execute('INSERT INTO `users` (`identifier`, `license`, `money`, `bank`, `permission_level`, `group`, `first_name`, `middle_name`, `last_name`, `date_of_birth`) VALUES (@identifier, @license, @money, @bank, @permission_level, @group, @first_name, @middle_name, @last_name, @date_of_birth)', 
+        {['identifier'] = newIdentifier, ['license'] = licenseIdentifier, ['money'] = 10000, ['bank'] = 0, ['permission_level'] = 0, ['group'] = "user", ['first_name'] = data.firstName, ['middle_name'] = data.middleName, ['last_name'] = data.lastName, ['date_of_birth'] = data.dateOfBirth},
+        function(affectedRows)
+            print(affectedRows)
+        end)  
+    end)
+
+    -- TODO check if database has completed the action properly, then forward the player to spawn in.
+end)
 
 -- Database initialisation.
 AddEventHandler('es:playerLoaded', function(source, user) 
@@ -36,7 +76,6 @@ AddEventHandler('es:playerLoaded', function(source, user)
                 local charTable = {}
                 for k, v in ipairs(playerInformation) do
                     identifierPrefix = v.identifier:sub(1, 5)
-                    print("identifier prefix = " .. identifierPrefix)
                     if(identifierPrefix:sub(1, 4) == "char") then
                         table.insert(charTable, v) -- Add character to a table to pass over to the player.
                     end

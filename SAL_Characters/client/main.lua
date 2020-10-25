@@ -38,7 +38,8 @@ RegisterNUICallback('register', function(data, cb)
     print("User wants to register with the following info: ")
     print(json.encode(data))
 
-    -- TODO Send this to the database. Char ID will also need to be gathered here too. 
+    -- Send player information to the database
+    TriggerServerEvent('sal_characters:newCharacter', data)
 end)
 
 -- Main Thread
