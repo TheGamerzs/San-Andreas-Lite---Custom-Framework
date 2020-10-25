@@ -14,6 +14,19 @@ AddEventHandler('SAL_Characters:SetupScreenRequirements', function()
     FreezeEntityPosition(GetPlayerPed(-1), true)
 end)
 
+-- TODO finish
+RegisterNetEvent('SAL_Characters:SpawnCharacter')
+AddEventHandler('SAL_Characters:SpawnCharacter', function()
+    isCharacterLoaded = true
+
+    DoScreenFadeIn(1000)
+    Citizen.Wait(500)
+
+    DisplayHud(true)
+    DisplayRadar(true)
+
+end)
+
 RegisterNetEvent('SAL_Characters:RegisterPlayer')
 AddEventHandler('SAL_Characters:RegisterPlayer', function(charTable)
     -- Create the NUI for player registration.
@@ -38,14 +51,15 @@ RegisterNUICallback('register', function(data, cb)
     print("User wants to register with the following info: ")
     print(json.encode(data))
 
+    displayActive = false
     -- Send player information to the database
-    TriggerServerEvent('sal_characters:newCharacter', data)
+    TriggerServerEvent('SAL_Characters:newCharacter', data)
 end)
 
 -- Main Thread
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(5)
+        Citizen.Wait(0)
 
         if NetworkIsSessionStarted() and (not isCharacterLoaded) then
             TriggerEvent('SAL_Characters:SetupScreenRequirements')
@@ -58,6 +72,12 @@ Citizen.CreateThread(function()
         DisableControlAction(0, 142, displayActive) -- MeleeAttackAlternative
         DisableControlAction(0, 18, displayActive) -- Enter
         DisableControlAction(0, 322, displayActive) -- ESC
-        DisableControlAction(0, 106, displayActive) -- VehicleMouseControlOverride     
+        DisableControlAction(0, 106, displayActive) -- VehicleMouseControlOverride
+        EnableControlAction(0, 1, not displayActive) -- LookLeftRight
+        EnableControlAction(0, 2, not displayActive) -- LookUpDown
+        EnableControlAction(0, 142, not displayActive) -- MeleeAttackAlternative
+        EnableControlAction(0, 18, not displayActive) -- Enter
+        EnableControlAction(0, 322, not displayActive) -- ESC
+        EnableControlAction(0, 106, not displayActive) -- VehicleMouseControlOverride    
     end
 end)

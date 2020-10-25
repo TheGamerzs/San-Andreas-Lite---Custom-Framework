@@ -43,6 +43,8 @@ function openUI(container, data) {
 // Gather the character ID from the slot that it chooses from.
 function gatherCharID(charSlot) {
   chosenID = charSlot.getAttribute("data-charid");
+
+  // TODO add a border to the card that is being chosen.
 }
 
 // When a new character is created, open the character creation screen.
@@ -95,7 +97,7 @@ $("#create-character").submit(function (event) {
     dob
   );
 
-  if (isNaN(middleName)) middleName = "";
+  if (isNaN(middleName)) middleName = ""; // TODO still needs checking
 
   switch (isResponseValid) {
     case "ok":
@@ -109,15 +111,16 @@ $("#create-character").submit(function (event) {
           charID: chosenID,
         })
       );
+      closeUI("char-create");
       break;
     case "name empty":
       console.log("Tell client to have a non-empty first/last name!"); // TODO implement error checking statements.
       break;
     case "invalid dob":
-      console.log("Tell client to change their dob");
+      console.log("Tell client to change their dob"); // TODO finish
       break;
     default:
-      console.log("Error occurred");
+      console.log("Error occurred"); // TODO finish
   }
 });
 
