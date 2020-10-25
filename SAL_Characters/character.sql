@@ -2,10 +2,10 @@ ALTER TABLE users
 ADD first_name varchar(255);
 
 ALTER TABLE users 
-ADD last_name varchar(255);
+ADD middle_name varchar(255);
 
 ALTER TABLE users 
-ADD height INT;
+ADD last_name varchar(255);
 
 ALTER TABLE users
-ADD char_id INT;
+ADD date_of_birth DATE;

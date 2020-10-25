@@ -30,17 +30,19 @@ AddEventHandler('es:playerLoaded', function(source, user)
                 
                 playerInformation = results
                 
+                -- Grabs all characters the player owns. Active characters have an identifier prefix of "charn" where n is a number.
+                -- The number can range from 1 to 4 depending on the character slot they chose in the selection window.
                 local identifierPrefix
+                local charTable = {}
                 for k, v in ipairs(playerInformation) do
                     identifierPrefix = v.identifier:sub(1, 5)
                     print("identifier prefix = " .. identifierPrefix)
-                    if(identifierPrefix == "char") then
-                        print("Add this to a char array to pass over to the client")
-                        -- TODO finish this. 
+                    if(identifierPrefix:sub(1, 4) == "char") then
+                        table.insert(charTable, v) -- Add character to a table to pass over to the player.
                     end
                 end 
-
-                TriggerClientEvent('SAL_Characters:RegisterPlayer', source)
+                
+                TriggerClientEvent('SAL_Characters:RegisterPlayer', source, charTable)
             end)
         end)
     else

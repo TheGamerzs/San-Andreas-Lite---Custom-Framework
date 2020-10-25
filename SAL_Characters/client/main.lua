@@ -1,5 +1,6 @@
 local displayActive = false
 local isCharacterLoaded = false
+local availableCharacters = {}
 
 -- Fade the screen out if the player hasn't loaded yet. 
 -- Used to create the blackout background effect.
@@ -14,10 +15,12 @@ AddEventHandler('SAL_Characters:SetupScreenRequirements', function()
 end)
 
 RegisterNetEvent('SAL_Characters:RegisterPlayer')
-AddEventHandler('SAL_Characters:RegisterPlayer', function(identifier)
+AddEventHandler('SAL_Characters:RegisterPlayer', function(charTable)
     -- Create the NUI for player registration.
     if not displayActive then
         displayActive = true
+
+        availableCharacters = charTable
 
         DisplayHud(false)
         DisplayRadar(false)
@@ -25,12 +28,18 @@ AddEventHandler('SAL_Characters:RegisterPlayer', function(identifier)
         Citizen.Wait(500)
 
         SendNUIMessage({
-            type = 'enableui'
+            type = 'enableui',
+            characters = availableCharacters
         })
     end
 end)
 
--- TODO Create handler when UI is closed.
+RegisterNUICallback('register', function(data, cb)
+    print("User wants to register with the following info: ")
+    print(json.encode(data))
+
+    -- TODO Send this to the database. Char ID will also need to be gathered here too. 
+end)
 
 -- Main Thread
 Citizen.CreateThread(function()
