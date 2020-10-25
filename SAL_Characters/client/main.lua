@@ -22,10 +22,12 @@ function ToggleSound(state)
     end
 end
 
--- TODO finish
+-- TODO finish and optimise.
+-- TODO Maybe refactor this into a spawn menu resource in the future?
 RegisterNetEvent('SAL_Characters:SpawnCharacter')
 AddEventHandler('SAL_Characters:SpawnCharacter', function()
     isCharacterLoaded = true
+    local ped = GetPlayerPed(-1)
 
     ToggleSound(true)
     if not IsPlayerSwitchInProgress() then
@@ -37,6 +39,7 @@ AddEventHandler('SAL_Characters:SpawnCharacter', function()
 
     ToggleSound(false)
 
+	SetEntityCoords(ped, 165.180, -984.785, 30.092)
     Citizen.Wait(5000)
     SwitchInPlayer(PlayerPedId())
 
