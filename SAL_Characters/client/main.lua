@@ -14,17 +14,39 @@ AddEventHandler('SAL_Characters:SetupScreenRequirements', function()
     FreezeEntityPosition(GetPlayerPed(-1), true)
 end)
 
+function ToggleSound(state)
+    if state then
+        StartAudioScene("MP_LEADERBOARD_SCENE");
+    else
+        StopAudioScene("MP_LEADERBOARD_SCENE");
+    end
+end
+
 -- TODO finish
 RegisterNetEvent('SAL_Characters:SpawnCharacter')
 AddEventHandler('SAL_Characters:SpawnCharacter', function()
     isCharacterLoaded = true
 
+    ToggleSound(true)
+    if not IsPlayerSwitchInProgress() then
+        SwitchOutPlayer(PlayerPedId(), 0, 1)
+    end
+
     DoScreenFadeIn(1000)
     Citizen.Wait(500)
 
+    ToggleSound(false)
+
+    Citizen.Wait(5000)
+    SwitchInPlayer(PlayerPedId())
+
+    -- Wait for the player switch to be completed (state 12).
+    while GetPlayerSwitchState() ~= 12 do
+        Citizen.Wait(0)
+    end
+
     DisplayHud(true)
     DisplayRadar(true)
-
 end)
 
 RegisterNetEvent('SAL_Characters:RegisterPlayer')
