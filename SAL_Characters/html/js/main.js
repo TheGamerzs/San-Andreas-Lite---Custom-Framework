@@ -42,12 +42,11 @@ function openUI(container, data) {
 }
 
 // Gather the character ID from the slot that it chooses from.
-// Test
 function gatherCharID(charSlot) {
   chosenID = charSlot.getAttribute("data-charid");
 
   // Alter the CSS of the chosen ID class to add a border.
-  $("[data-charid=" + chosenID + "]").css({ border: "5px solid red" });
+  $("[data-charid=" + chosenID + "]").css({ border: "3px solid red" });
 
   if (previousID !== null) {
     $("[data-charid=" + previousID + "]").css({ border: "none" });
