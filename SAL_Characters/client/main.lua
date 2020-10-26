@@ -23,34 +23,38 @@ function ToggleSound(state)
 end
 
 -- TODO finish and optimise.
--- TODO Maybe refactor this into a spawn menu resource in the future?
+-- TODO Add in a check to see if the user wants to use the spawn menu resource.
 RegisterNetEvent('SAL_Characters:SpawnCharacter')
 AddEventHandler('SAL_Characters:SpawnCharacter', function()
     isCharacterLoaded = true
     local ped = GetPlayerPed(-1)
 
-    ToggleSound(true)
-    if not IsPlayerSwitchInProgress() then
-        SwitchOutPlayer(PlayerPedId(), 0, 1)
+    if(not Config.sal_spawnmenu) then
+        ToggleSound(true)
+        if not IsPlayerSwitchInProgress() then
+            SwitchOutPlayer(PlayerPedId(), 0, 1)
+        end
+
+        DoScreenFadeIn(1000)
+        Citizen.Wait(500)
+
+        ToggleSound(false)
+
+        Citizen.Wait(7000) -- Sets how long to wait in the "cloud" state. 
+
+        SetEntityCoords(ped, Config.defaultSpawn.x, Config.defaultSpawn.y, Config.defaultSpawn.z) -- Player spawn location. could refactor this to a config.
+        SwitchInPlayer(PlayerPedId())
+
+        -- Wait for the player switch to be completed (state 12).
+        while GetPlayerSwitchState() ~= 12 do
+            Citizen.Wait(0)
+        end
+
+        DisplayHud(true)
+        DisplayRadar(true)
+    else
+        print("initiate handler for spawn menu here") -- TODO complete.
     end
-
-    DoScreenFadeIn(1000)
-    Citizen.Wait(500)
-
-    ToggleSound(false)
-
-    Citizen.Wait(7000) -- Sets how long to wait in the "cloud" state. 
-
-    SetEntityCoords(ped, 165.180, -984.785, 30.092)
-    SwitchInPlayer(PlayerPedId())
-
-    -- Wait for the player switch to be completed (state 12).
-    while GetPlayerSwitchState() ~= 12 do
-        Citizen.Wait(0)
-    end
-
-    DisplayHud(true)
-    DisplayRadar(true)
 end)
 
 RegisterNetEvent('SAL_Characters:RegisterPlayer')

@@ -4,6 +4,7 @@ game 'gta5'
 author 'Thomas Pritchard'
 
 client_scripts {
+    'config.lua',
     'client/main.lua'
 }
 
