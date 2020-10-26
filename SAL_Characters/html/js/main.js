@@ -29,7 +29,7 @@ function openUI(container, data) {
               char.bank +
               "</p></p><p class='card-text'>DOB: " +
               char.date_of_birth +
-              "</p><a href='' class='btn btn-primary select-character'>Select Character</a>"
+              "</p>"
           );
           $("[data-charid=" + charid + "]").attr("data-ischar", "1"); // Ensures that the system knows theres a character in this slot.
         });
