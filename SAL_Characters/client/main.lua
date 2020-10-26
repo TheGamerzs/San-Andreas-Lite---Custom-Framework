@@ -39,8 +39,9 @@ AddEventHandler('SAL_Characters:SpawnCharacter', function()
 
     ToggleSound(false)
 
-	SetEntityCoords(ped, 165.180, -984.785, 30.092)
-    Citizen.Wait(5000)
+    Citizen.Wait(7000) -- Sets how long to wait in the "cloud" state. 
+
+    SetEntityCoords(ped, 165.180, -984.785, 30.092)
     SwitchInPlayer(PlayerPedId())
 
     -- Wait for the player switch to be completed (state 12).
