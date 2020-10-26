@@ -79,7 +79,7 @@ AddEventHandler('es:playerLoaded', function(source, user)
                     end
                 end 
                 
-                TriggerClientEvent('SAL_Characters:RegisterPlayer', xPlayer, charTable)
+                TriggerClientEvent('SAL_Characters:LoadCharacterMenu', xPlayer, charTable)
             end)
         end)
     else

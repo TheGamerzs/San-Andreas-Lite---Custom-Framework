@@ -24,6 +24,7 @@ end
 
 -- TODO finish and optimise.
 -- TODO Add in a check to see if the user wants to use the spawn menu resource.
+-- TODO Save chosen character information in a class. 
 RegisterNetEvent('SAL_Characters:SpawnCharacter')
 AddEventHandler('SAL_Characters:SpawnCharacter', function()
     isCharacterLoaded = true
@@ -57,8 +58,8 @@ AddEventHandler('SAL_Characters:SpawnCharacter', function()
     end
 end)
 
-RegisterNetEvent('SAL_Characters:RegisterPlayer')
-AddEventHandler('SAL_Characters:RegisterPlayer', function(charTable)
+RegisterNetEvent('SAL_Characters:LoadCharacterMenu')
+AddEventHandler('SAL_Characters:LoadCharacterMenu', function(charTable)
     -- Create the NUI for player registration.
     if not displayActive then
         displayActive = true

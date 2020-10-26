@@ -31,6 +31,7 @@ function openUI(container, data) {
               char.date_of_birth +
               "</p><a href='' class='btn btn-primary select-character'>Select Character</a>"
           );
+          $("[data-charid=" + charid + "]").attr("data-ischar", "1"); // Ensures that the system knows theres a character in this slot.
         });
       }
     }
@@ -42,17 +43,20 @@ function openUI(container, data) {
 }
 
 // Gather the character ID from the slot that it chooses from.
+// Called by an onClick function in index.html.
 function gatherCharID(charSlot) {
-  chosenID = charSlot.getAttribute("data-charid");
+  // Check to see if a character has not been created in that slot first.
+  if (charSlot.getAttribute("data-ischar") === "0") {
+    chosenID = charSlot.getAttribute("data-charid");
 
-  // Alter the CSS of the chosen ID class to add a border.
-  $("[data-charid=" + chosenID + "]").css({ border: "3px solid red" });
+    // Alter the CSS of the chosen ID class to add a border.
+    $("[data-charid=" + chosenID + "]").css({ border: "3px solid red" });
 
-  if (previousID !== null) {
-    $("[data-charid=" + previousID + "]").css({ border: "none" });
+    if (previousID !== null) {
+      $("[data-charid=" + previousID + "]").css({ border: "none" });
+    }
+    previousID = chosenID;
   }
-
-  previousID = chosenID;
 }
 
 // When a new character is created, open the character creation screen.
