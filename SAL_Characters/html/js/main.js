@@ -42,6 +42,7 @@ function openUI(container, data) {
 }
 
 // Gather the character ID from the slot that it chooses from.
+// Test
 function gatherCharID(charSlot) {
   chosenID = charSlot.getAttribute("data-charid");
 
