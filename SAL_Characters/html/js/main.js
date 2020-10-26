@@ -1,4 +1,5 @@
 let chosenID = null;
+let previousID = null;
 
 function closeUI(container, data) {
   if (container === "char-select")
@@ -44,7 +45,14 @@ function openUI(container, data) {
 function gatherCharID(charSlot) {
   chosenID = charSlot.getAttribute("data-charid");
 
-  // TODO add a border to the card that is being chosen.
+  // Alter the CSS of the chosen ID class to add a border.
+  $("[data-charid=" + chosenID + "]").css({ border: "5px solid red" });
+
+  if (previousID !== null) {
+    $("[data-charid=" + previousID + "]").css({ border: "none" });
+  }
+
+  previousID = chosenID;
 }
 
 // When a new character is created, open the character creation screen.
