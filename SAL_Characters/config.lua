@@ -7,3 +7,5 @@ Config.defaultSpawn = { -- Change these if not using the spawn menu. Creates a d
     y = -984.785,
     z = 30.092
 }
+
+Config.startingMoney = 10000

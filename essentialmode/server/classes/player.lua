@@ -248,6 +248,10 @@ function CreatePlayer(source, permission_level, money, bank, identifier, license
 		return self.identifier
 	end
 
+	rTable.getLicense = function()
+		return self.license
+	end
+
 	-- Returns the users current active group
 	rTable.getGroup = function()
 		return self.group

@@ -4,37 +4,31 @@
 RegisterNetEvent('SAL_Characters:newCharacter')
 AddEventHandler('SAL_Characters:newCharacter', function(data)
     local player = source
-    local identifiers = GetPlayerIdentifiers(player)
-    
-    local licenseIdentifier
+    local xPlayer
     local steamIdentifier
-    local identifierSuffix
-    -- Extract the license identifier out of it. EssentialMode ensures that our character spawns in with a steam ID.
-    for k, v in ipairs(identifiers) do
-        if string.match(v, 'license:') then
-            licenseIdentifier = v
-        end
+    local licenseIdentifier
+    local identifierHex
 
-        if string.match(v, 'steam:') then
-            steamIdentifier = v
-            identifierSuffix = steamIdentifier:sub(7)
-        end
-    end
+    TriggerEvent('es:getPlayerFromId', player, function(user)
+        xPlayer = user
+        steamIdentifier = xPlayer.getIdentifier()
+        licenseIdentifier = xPlayer.getLicense()
+        identifierHex = steamIdentifier:sub(7)
+    end)
 
     local charID = data.charID
-    local newIdentifier = "char" .. charID .. ":" .. identifierSuffix
+    local newIdentifier = "char" .. charID .. ":" .. identifierHex
     -- Add to the database, ensure everything is okay then we can send to the client a message to load in.
     MySQL.ready(function()
-        MySQL.Async.execute('INSERT INTO `users` (`identifier`, `license`, `money`, `bank`, `permission_level`, `group`, `first_name`, `middle_name`, `last_name`, `date_of_birth`) VALUES (@identifier, @license, @money, @bank, @permission_level, @group, @first_name, @middle_name, @last_name, @date_of_birth)', 
-        {['identifier'] = newIdentifier, ['license'] = licenseIdentifier, ['money'] = 10000, ['bank'] = 0, ['permission_level'] = 0, ['group'] = "user", ['first_name'] = data.firstName, ['middle_name'] = data.middleName, ['last_name'] = data.lastName, ['date_of_birth'] = data.dateOfBirth},
-        function(affectedRows)
-           -- Check if database has completed the action properly, then forward the player to spawn in.
-            if affectedRows ~= nil then
-                TriggerClientEvent('SAL_Characters:SpawnCharacter', player)
-            else
-                print("Error occurred, check your database connection")
-            end
-        end)  
+        TriggerEvent('es_db:createUser', newIdentifier, licenseIdentifier, Config.startingMoney, 0, function()
+            TriggerEvent('es_db:updateUser', newIdentifier, {first_name = data.firstName, middle_name = data.middleName, last_name = data.lastName, date_of_birth = data.dateOfBirth}, function(result)
+                if result then
+                    TriggerClientEvent('SAL_Characters:SpawnCharacter', player)
+                else
+                    DropPlayer(player, "Error occurred, check your database connection")
+                end
+            end)
+        end)
     end)
 end)
 
