@@ -68,7 +68,7 @@ $("#select-character").click(function (event) {
         charID: chosenID,
       })
     );
-    closeUI("char-create");
+    closeUI("char-select");
   } else {
     console.log("Tell the user that they need to choose an ID"); // TODO complete.
   }
