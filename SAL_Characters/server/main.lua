@@ -3,10 +3,9 @@
 -- Finish the character registration and add to the database. 
 RegisterNetEvent('SAL_Characters:newCharacter')
 AddEventHandler('SAL_Characters:newCharacter', function(data)
-    local xPlayer = source
-
-    local identifiers = GetPlayerIdentifiers(xPlayer)
-
+    local player = source
+    local identifiers = GetPlayerIdentifiers(player)
+    
     local licenseIdentifier
     local steamIdentifier
     local identifierSuffix
@@ -31,7 +30,7 @@ AddEventHandler('SAL_Characters:newCharacter', function(data)
         function(affectedRows)
            -- Check if database has completed the action properly, then forward the player to spawn in.
             if affectedRows ~= nil then
-                TriggerClientEvent('SAL_Characters:SpawnCharacter', xPlayer)
+                TriggerClientEvent('SAL_Characters:SpawnCharacter', player)
             else
                 print("Error occurred, check your database connection")
             end
@@ -41,9 +40,11 @@ end)
 
 -- Database initialisation.
 AddEventHandler('es:playerLoaded', function(source, user) 
-    -- Get the player's identifier upon loading in.
-    local xPlayer = source
-    local identifiers = GetPlayerIdentifiers(xPlayer)
+    -- The user here acts as the user object created in EssentialMode. Needs to be passed down.
+    local xPlayer = user
+
+    -- Get the player's identifier upon loading in.    
+    local identifiers = GetPlayerIdentifiers(source)
 
     local identifier
     -- Extract the steam identifier out of it. EssentialMode ensures that our character spawns in with a steam ID.
@@ -63,6 +64,7 @@ AddEventHandler('es:playerLoaded', function(source, user)
         -- Extract the code after the "steam:" part.
         local identifierHex = identifier:sub(7)
         local playerInformation
+        -- TODO Integrate this into the EssentialMode base functions. 
         MySQL.ready(function()
             MySQL.Async.fetchAll('SELECT * FROM `users` WHERE `identifier` LIKE "%' .. identifierHex .. '%"', {}, function(results)
                 
@@ -79,10 +81,10 @@ AddEventHandler('es:playerLoaded', function(source, user)
                     end
                 end 
                 
-                TriggerClientEvent('SAL_Characters:LoadCharacterMenu', xPlayer, charTable)
+                TriggerClientEvent('SAL_Characters:LoadCharacterMenu', source, charTable, xPlayer)
             end)
         end)
     else
-        DropPlayer(xPlayer, "Invalid Identifier")
+        DropPlayer(source, "Invalid Identifier")
     end
 end)
