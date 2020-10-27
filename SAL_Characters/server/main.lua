@@ -23,6 +23,9 @@ AddEventHandler('SAL_Characters:newCharacter', function(data)
         TriggerEvent('es_db:createUser', newIdentifier, licenseIdentifier, Config.startingMoney, 0, function()
             TriggerEvent('es_db:updateUser', newIdentifier, {first_name = data.firstName, middle_name = data.middleName, last_name = data.lastName, date_of_birth = data.dateOfBirth}, function(result)
                 if result then
+                    -- Create the player class with the newest identifier.
+                    -- CreatePlayer(source, permission_level, money, bank, identifier, license, group, roles)
+                    TriggerEvent('es:createPlayer', player, 0, Config.startingMoney, 0, newIdentifier, licenseIdentifier, "user", "")
                     TriggerClientEvent('SAL_Characters:SpawnCharacter', player)
                 else
                     DropPlayer(player, "Error occurred, check your database connection")

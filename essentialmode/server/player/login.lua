@@ -64,6 +64,11 @@ function getPlayerFromId(id)
 	return Users[id]
 end
 
+-- Creates a character from an external resource.
+AddEventHandler('es:createPlayer', function(source, permission_level, money, bank, identifier, license, group, roles)
+	Users[source] = CreatePlayer(source, permission_level, money, bank, identifier, license, group, roles)
+end)
+
 -- Returns all EssentialMode user objects
 AddEventHandler('es:getPlayers', function(cb)
 	cb(Users)
