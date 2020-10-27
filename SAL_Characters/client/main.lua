@@ -1,5 +1,6 @@
 local displayActive = false
 local isCharacterLoaded = false
+local xPlayer = nil
 local availableCharacters = {}
 
 -- Fade the screen out if the player hasn't loaded yet. 
@@ -92,7 +93,15 @@ RegisterNUICallback('play', function(data, cb)
 
     displayActive = false
 
-    -- TODO Take the information and store this as a class. We can use the ID and take it from the available characters table.
+     -- Find the character that works with the character ID that we have been given. 
+    local charID = data.charID
+    for k, v in ipairs(availableCharacters) do
+        local identifier = v.identifier
+        if(identifier:sub(5, 5) == charID) then
+            print("This is the id we want") -- Set the identifier in our local class to the charID here.
+        end
+    end
+
     TriggerEvent('SAL_Characters:SpawnCharacter') 
 end)
 
