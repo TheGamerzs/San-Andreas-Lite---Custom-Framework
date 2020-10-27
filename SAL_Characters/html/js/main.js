@@ -46,22 +46,38 @@ function openUI(container, data) {
 // Called by an onClick function in index.html.
 function gatherCharID(charSlot) {
   // Check to see if a character has not been created in that slot first.
-  if (charSlot.getAttribute("data-ischar") === "0") {
-    chosenID = charSlot.getAttribute("data-charid");
 
-    // Alter the CSS of the chosen ID class to add a border.
-    $("[data-charid=" + chosenID + "]").css({ border: "3px solid red" });
+  chosenID = charSlot.getAttribute("data-charid");
 
-    if (previousID !== null) {
-      $("[data-charid=" + previousID + "]").css({ border: "none" });
-    }
-    previousID = chosenID;
+  // Alter the CSS of the chosen ID class to add a border.
+  $("[data-charid=" + chosenID + "]").css({ border: "3px solid red" });
+
+  if (previousID !== null && previousID !== chosenID) {
+    $("[data-charid=" + previousID + "]").css({ border: "none" });
   }
+  previousID = chosenID;
 }
+
+$("#select-character").click(function (event) {
+  event.preventDefault();
+  // Have it so that you need to click on a character slot before playing or creating a character.
+  if (chosenID !== null) {
+    $.post(
+      "https://sal_characters/play",
+      JSON.stringify({
+        charID: chosenID,
+      })
+    );
+    closeUI("char-create");
+  } else {
+    console.log("Tell the user that they need to choose an ID"); // TODO complete.
+  }
+});
 
 // When a new character is created, open the character creation screen.
 $("#create-new-character").click(function () {
   // Have it so that you need to click on a character slot before playing or creating a character.
+  // TODO run a check to make sure a character won't get overriden.
   if (chosenID !== null) {
     closeUI("char-select");
     openUI("char-create");

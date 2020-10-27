@@ -23,7 +23,6 @@ function ToggleSound(state)
 end
 
 -- TODO finish and optimise.
--- TODO Add in a check to see if the user wants to use the spawn menu resource.
 -- TODO Save chosen character information in a class. 
 RegisterNetEvent('SAL_Characters:SpawnCharacter')
 AddEventHandler('SAL_Characters:SpawnCharacter', function()
@@ -85,6 +84,16 @@ RegisterNUICallback('register', function(data, cb)
     displayActive = false
     -- Send player information to the database
     TriggerServerEvent('SAL_Characters:newCharacter', data)
+end)
+
+RegisterNUICallback('play', function(data, cb)
+    print("User wants to play using the following character slot: ")
+    print(json.encode(data))
+
+    displayActive = false
+
+    -- TODO Take the information and store this as a class. We can use the ID and take it from the available characters table.
+    TriggerEvent('SAL_Characters:SpawnCharacter') 
 end)
 
 -- Main Thread
