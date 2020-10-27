@@ -59,11 +59,9 @@ AddEventHandler('SAL_Characters:SpawnCharacter', function()
 end)
 
 RegisterNetEvent('SAL_Characters:LoadCharacterMenu')
-AddEventHandler('SAL_Characters:LoadCharacterMenu', function(charTable, user)
+AddEventHandler('SAL_Characters:LoadCharacterMenu', function(charTable)
     -- Create the NUI for player registration.
     if not displayActive then
-        xPlayer = user
-
         displayActive = true
 
         availableCharacters = charTable

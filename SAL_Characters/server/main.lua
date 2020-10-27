@@ -42,18 +42,7 @@ end)
 AddEventHandler('es:playerLoaded', function(source, user) 
     -- The user here acts as the user object created in EssentialMode. Needs to be passed down.
     local xPlayer = user
-
-    -- Get the player's identifier upon loading in.    
-    local identifiers = GetPlayerIdentifiers(source)
-
-    local identifier
-    -- Extract the steam identifier out of it. EssentialMode ensures that our character spawns in with a steam ID.
-    for k, v in ipairs(identifiers) do
-        if string.match(v, 'steam:') then
-            identifier = v
-            break
-        end
-    end
+    local identifier = xPlayer.getIdentifier()
 
     print("A player is loading in with the ID: " .. identifier)
 
@@ -64,24 +53,24 @@ AddEventHandler('es:playerLoaded', function(source, user)
         -- Extract the code after the "steam:" part.
         local identifierHex = identifier:sub(7)
         local playerInformation
-        -- TODO Integrate this into the EssentialMode base functions. 
         MySQL.ready(function()
-            MySQL.Async.fetchAll('SELECT * FROM `users` WHERE `identifier` LIKE "%' .. identifierHex .. '%"', {}, function(results)
-                
-                playerInformation = results
-                
-                -- Grabs all characters the player owns. Active characters have an identifier prefix of "charn" where n is a number.
-                -- The number can range from 1 to 4 depending on the character slot they chose in the selection window.
-                local identifierPrefix
-                local charTable = {}
-                for k, v in ipairs(playerInformation) do
-                    identifierPrefix = v.identifier:sub(1, 5)
-                    if(identifierPrefix:sub(1, 4) == "char") then
-                        table.insert(charTable, v) -- Add character to a table to pass over to the player.
-                    end
-                end 
-                
-                TriggerClientEvent('SAL_Characters:LoadCharacterMenu', source, charTable, xPlayer)
+            TriggerEvent('es_db:retrieveUserByHex', identifierHex, function(results)
+                if(results) then
+                    playerInformation = results
+                    -- Grabs all characters the player owns. Active characters have an identifier prefix of "charn" where n is a number.
+                    -- The number can range from 1 to 4 depending on the character slot they chose in the selection window.
+                    local identifierPrefix
+                    local charTable = {}
+                    for k, v in ipairs(playerInformation) do
+                        identifierPrefix = v.identifier:sub(1, 5)
+                        if(identifierPrefix:sub(1, 4) == "char") then
+                            table.insert(charTable, v) -- Add character to a table to pass over to the player.
+                        end
+                    end 
+                    TriggerClientEvent('SAL_Characters:LoadCharacterMenu', source, charTable)
+                else
+                    DropPlayer(source, "There was a database error. Please try again.")
+                end
             end)
         end)
     else

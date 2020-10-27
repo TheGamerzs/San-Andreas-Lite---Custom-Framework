@@ -22,6 +22,17 @@ AddEventHandler('es_db:retrieveUser', function(identifier, callback)
 	end)
 end)
 
+AddEventHandler('es_db:retrieveUserByHex', function(hexIdentifier, callback)
+	local Callback = callback
+	MySQL.Async.fetchAll('SELECT * FROM `users` WHERE `identifier` LIKE "%' .. hexIdentifier .. '%"', {}, function(users)
+		if users then
+			Callback(users)
+		else
+			Callback(false)
+		end
+	end)
+end)
+
 AddEventHandler('es_db:createUser', function(identifier, license, cash, bank, callback)
 	local user = {
 		identifier = identifier,
