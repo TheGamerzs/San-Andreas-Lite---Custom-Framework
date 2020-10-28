@@ -32,10 +32,15 @@ You can also submit issues via the GH Repo.
 # Installation
 - [Setup a Server](https://docs.fivem.net/docs/server-manual/setting-up-a-server)
 - EssentialMode ([Setup](https://docs.kanersps.pw/docs/essentialmode/installation))
+- esplugin_mysql ([Setup](https://github.com/kanersps/esplugin_mysql/))
 - MySQL-Async ([Setup](https://docs.kanersps.pw/docs/essentialmode/database))
+- Place repo folders into `cfx-server-data->resources` folder
 - Import SQL Files from the Repo - [SQL_1](https://github.com/ThomasPritchard/San-Andreas-Lite---Custom-Framework/blob/master/esplugin_mysql/esplugin_mysql.sql), [SQL_2](https://github.com/ThomasPritchard/San-Andreas-Lite---Custom-Framework/blob/master/SAL_Characters/character.sql)
 - Configure server.cfg
 ```cfg
+# Edit mysql_connection_string to your Database
+set mysql_connection_string "server=localhost;database=essentialmode;userid=root;"
+
 start mysql-async
 start essentialmode
 start esplugin_mysql
