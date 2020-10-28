@@ -47,3 +47,15 @@ start esplugin_mysql
 start es_admin2
 start SAL_Characters
 ```
+
+Trello Roadmap: https://trello.com/b/VK3TaLY8/san-andreas-lite-custom-framework
+
+# Do I need Steam open when using the framework in my server?
+
+Yes, for now. The framework uses Steam identifiers for each player and this requires you to have steam open so the server can access it.
+
+# Why use EssentialMode?
+
+EssentialMode is just a base for "getting started" with the framework. It provides useful handlers to ensure the player loads in properly and already has some useful utilities including a built in user class. This project will be modifying this resource as we see fit. The DB is being handled within the framework so EssentialMode is not touching most of the database entries. Aside from this, it also handles administration really well, which takes the load off of the project to focus on more framework-specific problems. The modified version of the script will be uploaded to the github when modifications begin.
+
+See the documentation here: https://docs.kanersps.pw/docs/essentialmode/components/events/
